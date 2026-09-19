@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+  <title>MobiCraft · mobile store</title>
+  <!-- Google Font & Font Awesome for clean icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: #f6f9fc;
+      color: #0b1e2e;
+      line-height: 1.5;
+      padding: 16px 16px 40px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* main app container – mobile first, max width for larger screens */
+    .app {
+      max-width: 480px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    /* header + brand */
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      background: #0b1e2e;
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+      box-shadow: 0 10px 20px -8px rgba(11, 30, 46, 0.3);
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 1.45rem;
+      letter-spacing: -0.5px;
+      color: #0b1e2e;
+    }
+
+    .brand-name span {
+      color: #2f7bff;
+      font-weight: 800;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .icon-btn {
+      background: white;
+      border: none;
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      color: #0b1e2e;
+      box-shadow: 0 8px 18px -6px rgba(0, 20, 40, 0.08);
+      transition: all 0.2s ease;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .icon-btn:hover {
+      background: #f0f5ff;
+      color: #2f7bff;
+      transform: translateY(-1px);
+    }
+
+    .cart-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #2f7bff;
+      color: white;
+      font-size: 0.7rem;
+      font-weight: 600;
+      width: 20px;
+      height: 20px;
+      border-radius: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 2px solid #f6f9fc;
+    }
+
+    /* search bar */
+    .search-container {
+      margin-bottom: 20px;
+    }
+
+    .search-bar {
+      display: flex;
+      align-items: center;
+      background: white;
+      border-radius: 30px;
+      padding: 6px 18px;
+      box-shadow: 0 8px 24px -8px rgba(0, 20, 40, 0.08);
+      transition: box-shadow 0.2s;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+    }
+
+    .search-bar:focus-within {
+      box-shadow: 0 12px 28px -10px rgba(47, 123, 255, 0.25);
+      border-color: #2f7bff30;
+    }
+
+    .search-bar i {
+      color: #8a9aa8;
+      font-size: 1.1rem;
+      margin-right: 12px;
+    }
+
+    .search-bar input {
+      border: none;
+      outline: none;
+      background: transparent;
+      width: 100%;
+      font-size: 1rem;
+      font-weight: 500;
+      color: #0b1e2e;
+      padding: 12px 0;
+    }
+
+    .search-bar input::placeholder {
+      color: #9aaebb;
+      font-weight: 400;
+    }
+
+    /* category chips */
+    .categories {
+      display: flex;
+      gap: 10px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+      margin-bottom: 16px;
+      scrollbar-width: none;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    .categories::-webkit-scrollbar {
+      display: none;
+    }
+
+    .chip {
+      background: white;
+      padding: 8px 18px;
+      border-radius: 40px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #435e6e;
+      white-space: nowrap;
+      box-shadow: 0 4px 10px -4px rgba(0, 20, 40, 0.06);
+      border: 1px solid #e5edf5;
+      transition: all 0.2s;
+      cursor: pointer;
+    }
+
+    .chip i {
+      margin-right: 6px;
+      font-size: 0.85rem;
+      color: #5f7f94;
+    }
+
+    .chip.active {
+      background: #0b1e2e;
+      color: white;
+      border-color: #0b1e2e;
+      box-shadow: 0 8px 18px -6px rgba(11, 30, 46, 0.3);
+    }
+
+    .chip.active i {
+      color: #b0d0ff;
+    }
+
+    .chip:hover:not(.active) {
+      background: #f0f7ff;
+      border-color: #b8d1ff;
+    }
+
+    /* section header */
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin: 22px 0 12px;
+    }
+
+    .section-header h2 {
+      font-size: 1.35rem;
+      font-weight: 700;
+      letter-spacing: -0.3px;
+      color: #0b1e2e;
+    }
+
+    .section-header a {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #2f7bff;
+      text-decoration: none;
+      transition: 0.2s;
+    }
+
+    .section-header a i {
+      font-size: 0.75rem;
+      margin-left: 4px;
+    }
+
+    .section-header a:hover {
+      color: #0b1e2e;
+    }
+
+    /* product grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
+    /* product card */
+    .product-card {
+      background: white;
+      border-radius: 24px;
+      padding: 16px 12px 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 12px 28px -10px rgba(0, 25, 45, 0.08);
+      transition: all 0.25s cubic-bezier(0.2, 0, 0, 1);
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(2px);
+      position: relative;
+    }
+
+    .product-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 22px 35px -12px rgba(0, 40, 80, 0.18);
+      border-color: #ffffff;
+    }
+
+    .product-badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #ff5c8a;
+      color: white;
+      font-weight: 600;
+      font-size: 0.65rem;
+      padding: 4px 10px;
+      border-radius: 20px;
+      letter-spacing: 0.3px;
+      text-transform: uppercase;
+      box-shadow: 0 6px 12px -4px #ff5c8a80;
+    }
+
+    .product-image {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin: 6px 0 12px;
+      padding: 8px 0;
+    }
+
+    .phone-svg {
+      width: 80px;
+      height: 130px;
+      filter: drop-shadow(0 12px 12px rgba(0, 0, 0, 0.06));
+      transition: transform 0.3s ease;
+    }
+
+    .product-card:hover .phone-svg {
+      transform: scale(1.02) rotate(1deg);
+    }
+
+    .product-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      text-align: left;
+    }
+
+    .product-name {
+      font-weight: 700;
+      font-size: 1rem;
+      line-height: 1.3;
+      color: #0b1e2e;
+    }
+
+    .product-spec {
+      font-size: 0.75rem;
+      color: #7a8f9e;
+      font-weight: 500;
+      letter-spacing: -0.1px;
+      margin-bottom: 4px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 6px;
+    }
+
+    .price {
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: #0b1e2e;
+      letter-spacing: -0.3px;
+    }
+
+    .price small {
+      font-size: 0.7rem;
+      font-weight: 500;
+      color: #8fa7b7;
+      text-decoration: line-through;
+      margin-left: 5px;
+    }
+
+    .add-btn {
+      background: #0b1e2e;
+      color: white;
+      border: none;
+      width: 36px;
+      height: 36px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      box-shadow: 0 8px 14px -8px #0b1e2e;
+      flex-shrink: 0;
+    }
+
+    .add-btn:hover {
+      background: #2f7bff;
+      transform: scale(1.03);
+      box-shadow: 0 10px 18px -8px #2f7bff;
+    }
+
+    /* feature banner / promo */
+    .promo-banner {
+      background: linear-gradient(135deg, #0b1e2e 0%, #1d3f5c 100%);
+      border-radius: 26px;
+      padding: 20px 22px;
+      margin: 28px 0 12px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: white;
+      box-shadow: 0 18px 30px -14px #0b1e2e;
+    }
+
+    .promo-text h3 {
+      font-weight: 700;
+      font-size: 1.25rem;
+      letter-spacing: -0.3px;
+      margin-bottom: 6px;
+    }
+
+    .promo-text p {
+      font-size: 0.85rem;
+      opacity: 0.8;
+      font-weight: 400;
+      max-width: 190px;
+    }
+
+    .promo-icon {
+      background: rgba(255, 255, 255, 0.15);
+      width: 65px;
+      height: 65px;
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 2rem;
+      color: #b0d0ff;
+      backdrop-filter: blur(5px);
+    }
+
+    /* bottom navigation */
+    .bottom-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: white;
+      padding: 10px 20px;
+      border-radius: 40px;
+      margin-top: 30px;
+      box-shadow: 0 16px 36px -10px rgba(0, 20, 40, 0.14);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #7a8f9e;
+      font-size: 0.7rem;
+      font-weight: 500;
+      transition: all 0.2s;
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 30px;
+      gap: 4px;
+    }
+
+    .nav-item i {
+      font-size: 1.25rem;
+    }
+
+    .nav-item.active {
+      color: #0b1e2e;
+      font-weight: 600;
+      background: #edf3fc;
+    }
+
+    .nav-item:hover {
+      color: #2f7bff;
+    }
+
+    /* tiny toast for feedback (add to cart) */
+    .toast {
+      position: fixed;
+      bottom: 100px;
+      left: 50%;
+      transform: translateX(-50%) scale(0.9);
+      background: #0b1e2e;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 40px;
+      font-size: 0.9rem;
+      font-weight: 500;
+      box-shadow: 0 20px 30px -10px #0b1e2e;
+      opacity: 0;
+      pointer-events: none;
+      transition: all 0.25s ease;
+      z-index: 999;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+      bottom: 120px;
+    }
+
+    /* utility */
+    .mt-1 { margin-top: 4px; }
+    .text-muted { color: #7a8f9e; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <!-- Header -->
+    <div class="header">
+      <div class="brand">
+        <div class="brand-icon">
+          <i class="fas fa-mobile-alt"></i>
+        </div>
+        <div class="brand-name">Mobi<span>Craft</span></div>
+      </div>
+      <div class="header-actions">
+        <button class="icon-btn" aria-label="Notifications">
+          <i class="far fa-bell"></i>
+        </button>
+        <button class="icon-btn" aria-label="Cart">
+          <i class="fas fa-bag-shopping"></i>
+          <span class="cart-badge" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-container">
+      <div class="search-bar">
+        <i class="fas fa-search"></i>
+        <input type="text" placeholder="Search phones, brands..." id="searchInput" aria-label="Search products">
+      </div>
+    </div>
+
+    <!-- Category chips -->
+    <div class="categories">
+      <div class="chip active" data-category="all"><i class="fas fa-border-all"></i> All</div>
+      <div class="chip" data-category="apple"><i class="fab fa-apple"></i> Apple</div>
+      <div class="chip" data-category="samsung"><i class="fas fa-mobile"></i> Samsung</div>
+      <div class="chip" data-category="google"><i class="fab fa-google"></i> Google</div>
+      <div class="chip" data-category="oneplus"><i class="fas fa-bolt"></i> OnePlus</div>
+    </div>
+
+    <!-- Featured / Trending section -->
+    <div class="section-header">
+      <h2>Trending now</h2>
+      <a href="#">View all <i class="fas fa-arrow-right"></i></a>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+      <!-- cards will be populated by JS (for easy filtering) -->
+    </div>
+
+    <!-- Promo banner -->
+    <div class="promo-banner">
+      <div class="promo-text">
+        <h3>⚡ Trade-in offer</h3>
+        <p>Get up to $350 off when you trade your old phone.</p>
+      </div>
+      <div class="promo-icon">
+        <i class="fas fa-arrow-right"></i>
+      </div>
+    </div>
+
+    <!-- Bottom navigation (decorative but adds app feel) -->
+    <div class="bottom-nav">
+      <div class="nav-item active">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-heart"></i>
+        <span>Wishlist</span>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-shopping-bag"></i>
+        <span>Cart</span>
+      </div>
+      <div class="nav-item">
+        <i class="fas fa-user"></i>
+        <span>Profile</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- toast message -->
+  <div id="toast" class="toast">Added to cart</div>
+
+  <script>
+    (function() {
+      // ---------- PRODUCT DATA ----------
+      const products = [
+        {
+          id: 1,
+          name: 'iPhone 15 Pro',
+          brand: 'apple',
+          spec: 'A17 Pro · 128GB',
+          price: 999,
+          oldPrice: 1099,
+          badge: 'New',
+          color: '#5e6b7a'
+        },
+        {
+          id: 2,
+          name: 'Galaxy S24 Ultra',
+          brand: 'samsung',
+          spec: 'Snapdragon 8 Gen 3 · 256GB',
+          price: 1199,
+          oldPrice: 1299,
+          badge: 'Hot',
+          color: '#2c3e50'
+        },
+        {
+          id: 3,
+          name: 'Pixel 8 Pro',
+          brand: 'google',
+          spec: 'Tensor G3 · 128GB',
+          price: 799,
+          oldPrice: 899,
+          badge: '',
+          color: '#2a6f97'
+        },
+        {
+          id: 4,
+          name: 'OnePlus 12',
+          brand: 'oneplus',
+          spec: 'Snapdragon 8 Gen 3 · 256GB',
+          price: 799,
+          oldPrice: 869,
+          badge: 'Deal',
+          color: '#1b4d3e'
+        },
+        {
+          id: 5,
+          name: 'iPhone 15',
+          brand: 'apple',
+          spec: 'A16 Bionic · 128GB',
+          price: 699,
+          oldPrice: 799,
+          badge: '',
+          color: '#9d8189'
+        },
+        {
+          id: 6,
+          name: 'Galaxy Z Flip 5',
+          brand: 'samsung',
+          spec: 'Snapdragon 8 Gen 2 · 256GB',
+          price: 999,
+          oldPrice: 1199,
+          badge: 'Limited',
+          color: '#5e548e'
+        },
+        {
+          id: 7,
+          name: 'Pixel 8',
+          brand: 'google',
+          spec: 'Tensor G3 · 128GB',
+          price: 599,
+          oldPrice: 699,
+          badge: '',
+          color: '#3d5a80'
+        },
+        {
+          id: 8,
+          name: 'OnePlus Nord 3',
+          brand: 'oneplus',
+          spec: 'Dimensity 9000 · 128GB',
+          price: 399,
+          oldPrice: 499,
+          badge: 'Budget',
+          color: '#6b705c'
+        }
+      ];
+
+      // ---------- DOM ELEMENTS ----------
+      const grid = document.getElementById('productGrid');
+      const searchInput = document.getElementById('searchInput');
+      const chips = document.querySelectorAll('.chip');
+      const cartCountSpan = document.getElementById('cartCount');
+      const toast = document.getElementById('toast');
+
+      let currentCategory = 'all';
+      let currentSearch = '';
+      let cartItems = 0;
+
+      // ---------- SVG PHONE RENDER (attractive minimal phone shape) ----------
+      function getPhoneSVG(color = '#5e6b7a') {
+        return `
+          <svg class="phone-svg" viewBox="0 0 100 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="12" y="8" width="76" height="144" rx="20" fill="${color}" fill-opacity="0.15" stroke="${color}" stroke-width="2.5"/>
+            <rect x="24" y="28" width="52" height="8" rx="4" fill="${color}" fill-opacity="0.4"/>
+            <rect x="28" y="48" width="44" height="64" rx="8" fill="${color}" fill-opacity="0.25"/>
+            <circle cx="50" cy="132" r="10" fill="${color}" fill-opacity="0.3" stroke="${color}" stroke-width="2"/>
+            <circle cx="50" cy="132" r="5" fill="${color}" fill-opacity="0.8"/>
+            <rect x="30" y="20" width="8" height="2" rx="1" fill="${color}" fill-opacity="0.6"/>
+            <rect x="62" y="20" width="8" height="2" rx="1" fill="${color}" fill-opacity="0.6"/>
+            <!-- camera dots -->
+            <circle cx="44" cy="20" r="2.5" fill="${color}" fill-opacity="0.7"/>
+            <circle cx="56" cy="20" r="2.5" fill="${color}" fill-opacity="0.7"/>
+          </svg>
+        `;
+      }
+
+      // ---------- RENDER PRODUCT CARDS based on filter ----------
+      function renderProducts() {
+        let filtered = products.filter(p => {
+          // category filter
+          if (currentCategory !== 'all' && p.brand !== currentCategory) return false;
+          // search filter
+          if (currentSearch.trim() !== '') {
+            const query = currentSearch.trim().toLowerCase();
+            return p.name.toLowerCase().includes(query) || 
+                   p.brand.toLowerCase().includes(query) ||
+                   p.spec.toLowerCase().includes(query);
+          }
+          return true;
+        });
+
+        if (filtered.length === 0) {
+          grid.innerHTML = `<div style="grid-column:1/-1; text-align:center; padding:48px 0; color:#7a8f9e; font-weight:500;">
+            <i class="fas fa-search" style="font-size:2rem; opacity:0.5; margin-bottom:12px; display:block;"></i>
+            No phones found
+          </div>`;
+          return;
+        }
+
+        grid.innerHTML = filtered.map(product => {
+          const oldPriceHtml = product.oldPrice ? `<small>$${product.oldPrice}</small>` : '';
+          const badgeHtml = product.badge ? `<div class="product-badge">${product.badge}</div>` : '';
+          return `
+            <div class="product-card" data-id="${product.id}">
+              ${badgeHtml}
+              <div class="product-image">
+                ${getPhoneSVG(product.color)}
+              </div>
+              <div class="product-info">
+                <div class="product-name">${product.name}</div>
+                <div class="product-spec">${product.spec}</div>
+                <div class="price-row">
+                  <div class="price">$${product.price}${oldPriceHtml}</div>
+                  <button class="add-btn" data-id="${product.id}" aria-label="Add to cart">
+                    <i class="fas fa-plus"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // attach event listeners to all add buttons inside grid
+        document.querySelectorAll('.add-btn').forEach(btn => {
+          btn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const id = Number(btn.getAttribute('data-id'));
+            addToCart(id);
+          });
+        });
+      }
+
+      // ---------- ADD TO CART (simple counter + toast) ----------
+      function addToCart(productId) {
+        cartItems += 1;
+        cartCountSpan.textContent = cartItems;
+        const product = products.find(p => p.id === productId);
+        showToast(`✔️ ${product ? product.name : 'Item'} added to cart`);
+        // optional tiny bounce on cart icon
+        const cartBtn = document.querySelector('.icon-btn .fa-bag-shopping');
+        if (cartBtn) {
+          cartBtn.style.transform = 'scale(1.2)';
+          setTimeout(() => cartBtn.style.transform = 'scale(1)', 150);
+        }
+      }
+
+      // ---------- TOAST MESSAGE ----------
+      let toastTimeout;
+      function showToast(message) {
+        toast.textContent = message;
+        toast.classList.add('show');
+        if (toastTimeout) clearTimeout(toastTimeout);
+        toastTimeout = setTimeout(() => {
+          toast.classList.remove('show');
+        }, 2000);
+      }
+
+      // ---------- FILTER EVENTS ----------
+      // category chips
+      chips.forEach(chip => {
+        chip.addEventListener('click', () => {
+          chips.forEach(c => c.classList.remove('active'));
+          chip.classList.add('active');
+          currentCategory = chip.getAttribute('data-category');
+          renderProducts();
+        });
+      });
+
+      // search input
+      searchInput.addEventListener('input', (e) => {
+        currentSearch = e.target.value;
+        renderProducts();
+      });
+
+      // ---------- INITIAL RENDER ----------
+      renderProducts();
+
+      // ---------- EXTRA: bottom nav / wishlist demo (just visual) ----------
+      document.querySelectorAll('.nav-item').forEach(item => {
+        item.addEventListener('click', function() {
+          document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+          this.classList.add('active');
+          // (No functional change, just interactive feel)
+        });
+      });
+
+      // ensure cart badge initial is zero, but it's already 0.
+      // if someone clicks outside, nothing.
+    })();
+  </script>
+</body>
+</html>
